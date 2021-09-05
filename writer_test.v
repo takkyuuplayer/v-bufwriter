@@ -94,7 +94,7 @@ fn test_writer() ? {
 				written: 0
 			}},
 			ErrorWriterTestStruct{1, 2, none__, ErrShortWrite{
-				written: 5,
+				written: 5
 			}},
 			ErrorWriterTestStruct{1, 1, none__, none__},
 			ErrorWriterTestStruct{0, 1, some_error, some_error},
@@ -142,7 +142,6 @@ fn (w ErrorWriterTestStruct) write(buf []byte) ?int {
 }
 
 struct ErrWriterTest {
-	msg     string = 'some error'
-	code    int
+	msg  string = 'some error'
+	code int
 }
-

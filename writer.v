@@ -75,12 +75,12 @@ pub fn (mut b Writer) flush() ? {
 }
 
 // available returns how many bytes are unused in the buffer.
-pub fn (b Writer) available() int {
+fn (b Writer) available() int {
 	return b.buf.len - b.n
 }
 
 // buffered returns the number of bytes that have been written into the current buffer.
-pub fn (b Writer) buffered() int {
+fn (b Writer) buffered() int {
 	return b.n
 }
 
