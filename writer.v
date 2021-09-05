@@ -13,7 +13,7 @@ mut:
 	writer  io.Writer
 	buf     []byte
 	n       int // the number of bytes that have been written into the current buffer.
-	lasterr IError = none__
+	lasterr IError = none
 }
 
 // Config are options that can be given to a writer
