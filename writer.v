@@ -13,13 +13,19 @@ mut:
 	writer  io.Writer
 	buf     []byte
 	n       int // the number of bytes that have been written into the current buffer.
-	lasterr string
+	lasterr IError = none__
 }
 
 // Config are options that can be given to a writer
 pub struct Config {
 	writer io.Writer
 	cap    int = 4096
+}
+
+pub struct ErrShortWrite {
+	msg     string = 'short write'
+	code    int
+	written int
 }
 
 // new returns a new Writer whose buffer has the default size.
@@ -42,8 +48,8 @@ pub fn new(o Config) &Writer {
 
 // flush writes any buffered data to the underlying io.Writer.
 pub fn (mut b Writer) flush() ? {
-	if b.lasterr != '' {
-		return error(b.lasterr)
+	if b.lasterr !is None__ {
+		return b.lasterr
 	}
 	if b.n == 0 {
 		return
@@ -54,14 +60,16 @@ pub fn (mut b Writer) flush() ? {
 				copy(b.buf[0..b.n - n], b.buf[n..b.n])
 			}
 			b.n -= n
-			b.lasterr = 'short write'
-			return error(b.lasterr)
+			b.lasterr = IError(ErrShortWrite{
+				written: n
+			})
+			return b.lasterr
 		} else {
 			b.n = 0
 			return
 		}
 	} else {
-		b.lasterr = err.str()
+		b.lasterr = err
 		return err
 	}
 }
@@ -79,8 +87,8 @@ pub fn (b Writer) buffered() int {
 // write writes the contents of p into the buffer.
 // It returns the number of bytes written.
 pub fn (mut b Writer) write(buf []byte) ?int {
-	if b.lasterr != '' {
-		return error(b.lasterr)
+	if b.lasterr !is None__ {
+		return b.lasterr
 	}
 	mut written := 0
 	for buf.len > b.available() + written {
@@ -89,7 +97,7 @@ pub fn (mut b Writer) write(buf []byte) ?int {
 			// Large write, empty buffer.
 			// Write directly from buf to avoid copy.
 			n = b.writer.write(buf) or {
-				b.lasterr = err.str()
+				b.lasterr = err
 				return err
 			}
 		} else {
