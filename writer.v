@@ -82,27 +82,25 @@ pub fn (mut b Writer) write(buf []byte) ?int {
 	if b.lasterr != '' {
 		return error(b.lasterr)
 	}
-	mut sum := 0
-	mut p := buf.clone()
-	for p.len > b.available() {
+	mut written := 0
+	for buf.len > b.available() + written {
 		mut n := 0
 		if b.buffered() == 0 {
 			// Large write, empty buffer.
-			// Write directly from p to avoid copy.
-			n = b.writer.write(p) or {
+			// Write directly from buf to avoid copy.
+			n = b.writer.write(buf) or {
 				b.lasterr = err.str()
 				return err
 			}
 		} else {
-			n = copy(b.buf[b.n..], p)
+			n = copy(b.buf[b.n..], buf[written..])
 			b.n += n
 			b.flush() or {}
 		}
-		sum += n
-		p = p[n..]
+		written += n
 	}
-	n := copy(b.buf[b.n..], p)
+	n := copy(b.buf[b.n..], buf[written..])
 	b.n += n
-	sum += n
-	return sum
+	written += n
+	return written
 }
