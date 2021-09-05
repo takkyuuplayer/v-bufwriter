@@ -4,37 +4,30 @@ import takkyuuplayer.bytebuf
 
 fn test_new() {
 	w := bytebuf.Buffer{}
-	writer := new(w)
-
-	assert writer.buf == []byte{len: 4096}
-	assert writer.n == 0
-	if writer.wr is bytebuf.Buffer {
-		assert writer.wr == w
-	} else {
-		assert false
-	}
-}
-
-fn test_new_size() {
 	{
-		w := bytebuf.Buffer{}
-		writer := new_size(w, 8192)
+		writer := new(writer: w)
 
-		assert writer.buf == []byte{len: 8192}
+		assert writer.buf == []byte{len: 4096}
 		assert writer.n == 0
-		if writer.wr is bytebuf.Buffer {
-			assert writer.wr == w
+		if writer.writer is bytebuf.Buffer {
+			assert writer.writer == w
 		} else {
 			assert false
 		}
 	}
 	{
-		w := bytebuf.Buffer{}
-		writer := new_size(w, 8192)
-		writer2 := new_size(writer, 8192)
+		writer := new(writer: w, cap: 1024)
 
-		if writer.wr is bytebuf.Buffer && writer2.wr is bytebuf.Buffer {
-			assert writer2.wr == writer.wr
+		assert writer.buf == []byte{len: 1024}
+	}
+	{
+		writer := new(writer: w)
+		w1 := new(writer: writer)
+
+		assert w1.buf == writer.buf
+		assert w1.n == writer.n
+		if writer.writer is bytebuf.Buffer && w1.writer is bytebuf.Buffer {
+			assert w1.writer == writer.writer
 		} else {
 			assert false
 		}
@@ -55,7 +48,7 @@ fn test_writer() ? {
 			for bs in bufwriter.bufsizes {
 				w.reset()
 
-				mut buf := new_size(w, bs)
+				mut buf := new(writer: w, cap: bs)
 				assert buf.write(data[..nwrite]) ? == nwrite
 				buf.flush() ?
 
