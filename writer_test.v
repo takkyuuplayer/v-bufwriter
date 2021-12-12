@@ -87,6 +87,13 @@ fn test_writer() ? {
 		}
 	}
 	{
+		mut w := bytebuf.Buffer{}
+		mut buf := new(writer: w, cap: 2)
+
+		assert buf.write([byte(1)]) ? == 1
+		assert buf.write([byte(1), 2, 3, 4]) ? == 4
+	}
+	{
 		// errors
 		some_error := ErrShortWrite{}
 		mut error_writer_tests := [
