@@ -96,7 +96,7 @@ pub fn (mut b Writer) write(buf []byte) ?int {
 		if b.buffered() == 0 {
 			// Large write, empty buffer.
 			// Write directly from buf to avoid copy.
-			n = b.writer.write(buf) or {
+			n = b.writer.write(buf[written..]) or {
 				b.lasterr = err
 				return err
 			}
