@@ -56,7 +56,7 @@ pub fn (mut b Writer) flush() ? {
 	if n := b.writer.write(b.buf[0..b.n]) {
 		if n < b.n {
 			if n > 0 && n < b.n {
-				copy(b.buf[0..b.n - n], b.buf[n..b.n])
+				copy(mut b.buf[0..b.n - n], b.buf[n..b.n])
 			}
 			b.n -= n
 			b.lasterr = IError(ErrShortWrite{
@@ -101,13 +101,13 @@ pub fn (mut b Writer) write(buf []byte) ?int {
 				return err
 			}
 		} else {
-			n = copy(b.buf[b.n..], buf[written..])
+			n = copy(mut b.buf[b.n..], buf[written..])
 			b.n += n
 			b.flush() or {}
 		}
 		written += n
 	}
-	n := copy(b.buf[b.n..], buf[written..])
+	n := copy(mut b.buf[b.n..], buf[written..])
 	b.n += n
 	written += n
 	return written
