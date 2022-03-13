@@ -23,8 +23,7 @@ pub struct Config {
 }
 
 pub struct ErrShortWrite {
-	msg     string = 'short write'
-	code    int
+	MessageError
 	written int
 }
 
@@ -61,6 +60,7 @@ pub fn (mut b Writer) flush() ? {
 			}
 			b.n -= n
 			b.lasterr = IError(ErrShortWrite{
+				msg: 'ShortWrite'
 				written: n
 			})
 			return b.lasterr
