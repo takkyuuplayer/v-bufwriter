@@ -8,7 +8,7 @@ fn test_new() {
 		// no cap
 		writer := new(writer: w)
 
-		assert writer.buf == []byte{len: 4096}
+		assert writer.buf == []u8{len: 4096}
 		assert writer.n == 0
 		if writer.writer is bytebuf.Buffer {
 			assert writer.writer == w
@@ -20,7 +20,7 @@ fn test_new() {
 		// with cap
 		writer := new(writer: w, cap: 1024)
 
-		assert writer.buf == []byte{len: 1024}
+		assert writer.buf == []u8{len: 1024}
 	}
 	{
 		// idempotent
@@ -66,11 +66,11 @@ fn test_new() {
 fn test_writer() ? {
 	{
 		// basic
-		bufsizes := [byte(0), 16, 23, 32, 46, 64, 93, 128, 1024, 4096]
+		bufsizes := [u8(0), 16, 23, 32, 46, 64, 93, 128, 1024, 4096]
 
-		mut data := []byte{len: 8192}
+		mut data := []u8{len: 8192}
 		for i := 0; i < data.len; i++ {
-			data[i] = byte(` ` + i % (`~` - ` `))
+			data[i] = u8(` ` + i % (`~` - ` `))
 		}
 
 		mut w := bytebuf.Buffer{}
@@ -79,10 +79,10 @@ fn test_writer() ? {
 				w.reset()
 
 				mut buf := new(writer: w, cap: bs)
-				assert buf.write(data[..nwrite]) ? == nwrite
-				buf.flush() ?
+				assert buf.write(data[..nwrite])? == nwrite
+				buf.flush()?
 
-				assert w.bytes() == data[..nwrite]
+				assert w.u8s() == data[..nwrite]
 			}
 		}
 	}
@@ -90,8 +90,8 @@ fn test_writer() ? {
 		mut w := bytebuf.Buffer{}
 		mut buf := new(writer: w, cap: 2)
 
-		assert buf.write([byte(1)]) ? == 1
-		assert buf.write([byte(1), 2, 3, 4]) ? == 4
+		assert buf.write([u8(1)])? == 1
+		assert buf.write([u8(1), 2, 3, 4])? == 4
 	}
 	{
 		// errors
@@ -113,7 +113,7 @@ fn test_writer() ? {
 
 		for mut w in error_writer_tests {
 			mut buf := new(writer: w)
-			buf.write('hello world'.bytes()) ?
+			buf.write('hello world'.bytes())?
 
 			for i := 0; i < 2; i++ {
 				if _ := buf.flush() {
@@ -143,7 +143,7 @@ struct ErrorWriterTestStruct {
 	expect IError
 }
 
-fn (w ErrorWriterTestStruct) write(buf []byte) ?int {
+fn (w ErrorWriterTestStruct) write(buf []u8) ?int {
 	if w.err !is None__ {
 		return w.err
 	}
