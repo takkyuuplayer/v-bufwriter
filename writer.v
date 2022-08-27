@@ -11,8 +11,8 @@ import io
 pub struct Writer {
 mut:
 	writer  io.Writer
-	buf     []byte
-	n       int // the number of bytes that have been written into the current buffer.
+	buf     []u8
+	n       int // the number of u8s that have been written into the current buffer.
 	lasterr IError = none
 }
 
@@ -41,7 +41,7 @@ pub fn new(o Config) &Writer {
 
 	return &Writer{
 		writer: o.writer
-		buf: []byte{len: o.cap, cap: o.cap}
+		buf: []u8{len: o.cap, cap: o.cap}
 	}
 }
 
@@ -74,19 +74,19 @@ pub fn (mut b Writer) flush() ? {
 	}
 }
 
-// available returns how many bytes are unused in the buffer.
+// available returns how many u8s are unused in the buffer.
 fn (b Writer) available() int {
 	return b.buf.len - b.n
 }
 
-// buffered returns the number of bytes that have been written into the current buffer.
+// buffered returns the number of u8s that have been written into the current buffer.
 fn (b Writer) buffered() int {
 	return b.n
 }
 
 // write writes the contents of p into the buffer.
-// It returns the number of bytes written.
-pub fn (mut b Writer) write(buf []byte) ?int {
+// It returns the number of u8s written.
+pub fn (mut b Writer) write(buf []u8) ?int {
 	if b.lasterr !is None__ {
 		return b.lasterr
 	}
