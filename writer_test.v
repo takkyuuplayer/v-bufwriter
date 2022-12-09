@@ -143,7 +143,7 @@ struct ErrorWriterTestStruct {
 	expect IError
 }
 
-fn (w ErrorWriterTestStruct) write(buf []u8) ?int {
+fn (w ErrorWriterTestStruct) write(buf []u8) !int {
 	if w.err !is None__ {
 		return w.err
 	}

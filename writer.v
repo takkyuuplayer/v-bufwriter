@@ -86,7 +86,7 @@ fn (b Writer) buffered() int {
 
 // write writes the contents of p into the buffer.
 // It returns the number of u8s written.
-pub fn (mut b Writer) write(buf []u8) ?int {
+pub fn (mut b Writer) write(buf []u8) !int {
 	if b.lasterr !is None__ {
 		return b.lasterr
 	}
