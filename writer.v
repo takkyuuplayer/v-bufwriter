@@ -46,7 +46,7 @@ pub fn new(o Config) &Writer {
 }
 
 // flush writes any buffered data to the underlying io.Writer.
-pub fn (mut b Writer) flush() ? {
+pub fn (mut b Writer) flush() ! {
 	if b.lasterr !is None__ {
 		return b.lasterr
 	}
