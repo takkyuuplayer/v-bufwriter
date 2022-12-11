@@ -63,7 +63,7 @@ fn test_new() {
 	}
 }
 
-fn test_writer() ? {
+fn test_writer() ! {
 	{
 		// basic
 		bufsizes := [u8(0), 16, 23, 32, 46, 64, 93, 128, 1024, 4096]
@@ -79,8 +79,8 @@ fn test_writer() ? {
 				w.reset()
 
 				mut buf := new(writer: w, cap: bs)
-				assert buf.write(data[..nwrite])? == nwrite
-				buf.flush()?
+				assert buf.write(data[..nwrite])! == nwrite
+				buf.flush()!
 
 				assert w.u8s() == data[..nwrite]
 			}
@@ -90,8 +90,8 @@ fn test_writer() ? {
 		mut w := bytebuf.Buffer{}
 		mut buf := new(writer: w, cap: 2)
 
-		assert buf.write([u8(1)])? == 1
-		assert buf.write([u8(1), 2, 3, 4])? == 4
+		assert buf.write([u8(1)])! == 1
+		assert buf.write([u8(1), 2, 3, 4])! == 4
 	}
 	{
 		// errors
@@ -113,7 +113,7 @@ fn test_writer() ? {
 
 		for mut w in error_writer_tests {
 			mut buf := new(writer: w)
-			buf.write('hello world'.bytes())?
+			buf.write('hello world'.bytes())!
 
 			for i := 0; i < 2; i++ {
 				if _ := buf.flush() {
