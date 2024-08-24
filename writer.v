@@ -41,7 +41,7 @@ pub fn new(o Config) &Writer {
 
 	return &Writer{
 		writer: o.writer
-		buf: []u8{len: o.cap, cap: o.cap}
+		buf:    []u8{len: o.cap, cap: o.cap}
 	}
 }
 
@@ -60,7 +60,7 @@ pub fn (mut b Writer) flush() ! {
 			}
 			b.n -= n
 			b.lasterr = IError(ErrShortWrite{
-				msg: 'ShortWrite'
+				msg:     'ShortWrite'
 				written: n
 			})
 			return b.lasterr

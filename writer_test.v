@@ -98,11 +98,11 @@ fn test_writer() ! {
 		some_error := ErrShortWrite{}
 		mut error_writer_tests := [
 			ErrorWriterTestStruct{0, 1, none__, ErrShortWrite{
-				msg: 'ShortWrite'
+				msg:     'ShortWrite'
 				written: 0
 			}},
 			ErrorWriterTestStruct{1, 2, none__, ErrShortWrite{
-				msg: 'ShortWrite'
+				msg:     'ShortWrite'
 				written: 5
 			}},
 			ErrorWriterTestStruct{1, 1, none__, none__},
