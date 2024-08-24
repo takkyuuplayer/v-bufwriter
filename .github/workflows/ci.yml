@@ -25,7 +25,6 @@ jobs:
           path: repo
 
       - run: v fmt -verify .
+      - run: v install
       - run: v vet .
-      - run: |
-          v install
-          v test .
+      - run: v test .
