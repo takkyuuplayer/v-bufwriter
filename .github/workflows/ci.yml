@@ -26,4 +26,6 @@ jobs:
 
       - run: v fmt -verify .
       - run: v vet .
-      - run: v test .
+      - run: |
+          v install
+          v test .
