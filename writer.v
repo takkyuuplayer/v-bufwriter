@@ -18,6 +18,7 @@ mut:
 
 // Config are options that can be given to a writer
 pub struct Config {
+pub:
 	writer io.Writer
 	cap    int = 4096
 }
